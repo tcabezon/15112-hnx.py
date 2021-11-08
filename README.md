@@ -4,9 +4,13 @@
 
 - [x] write function to model sphere in numpy stl
 - [ ] WORKING: 3D -> 2D
+- [ ] combine two .stl mesh objects
+- [ ] write function to model the initial mesh of the ring
 - [ ] add comments to the code
 
 ## Thu 18-Nov, 8pm: TP1
+
+- [ ] Interface
 
 ## Tue 23-Nov, 8pm: TP2
 
