@@ -95,13 +95,49 @@ def sphereMesh(center=[0.,0.,0.],stepU=10,stepV=6,r=1):
     print(facesSphere)
     return sphere
 
-
+#####################################################
 center=[0.,0.,0.]
 stepU=100
 stepV=60
 r=1
 sphere1= sphereMesh()
 sphere2= sphereMesh(center=[0.,0.,1.])
+
+combined = mesh.Mesh(np.concatenate([sphere1.data, sphere2.data]))
+combined.save('combined.stl')
+
+ring = mesh.Mesh.from_file('ring.stl')
+
+
+
+
+
+
+
+
+
+# Write the mesh to file "cube.stl"
+#sphere1.save('sphere1.stl')
+#sphere2.save('sphere2.stl')
+
+#plotting
+# Create a new plot
+figure = pyplot.figure()
+axes = mplot3d.Axes3D(figure)
+
+# Load the STL files and add the vectors to the plot
+
+axes.add_collection3d(mplot3d.art3d.Poly3DCollection(ring.vectors, facecolors='r',edgecolors='k', linewidths=1, alpha=0.75))
+#axes.add_collection3d(mplot3d.art3d.Poly3DCollection(sphere2.vectors, facecolors='b',edgecolors='k', linewidths=1, alpha=0.75))
+#axes.plot3D(vertices[:,0], vertices[:,1], vertices[:,2], 'gray')
+
+# Auto scale to the mesh size
+scale = ring.points.flatten()
+axes.auto_scale_xyz(scale, scale, scale)
+#axes.scatter3D(vertices[:,0], vertices[:,1], vertices[:,2])
+
+# Show the plot to the screen
+pyplot.show()
 
 '''
 #plotting
@@ -112,29 +148,3 @@ axes.plot3D(pointsSphere[:,0], pointsSphere[:,1], pointsSphere[:,2], 'grey')
 axes.scatter(center[0],center[1],center[2])
 # Show the plot to the screen
 pyplot.show()'''
-
-
-
-
-# Write the mesh to file "cube.stl"
-sphere1.save('sphere1.stl')
-#sphere2.save('sphere2.stl')
-
-#plotting
-# Create a new plot
-figure = pyplot.figure()
-axes = mplot3d.Axes3D(figure)
-
-# Load the STL files and add the vectors to the plot
-
-axes.add_collection3d(mplot3d.art3d.Poly3DCollection(sphere1.vectors, facecolors='r',edgecolors='k', linewidths=1, alpha=0.75))
-#axes.add_collection3d(mplot3d.art3d.Poly3DCollection(sphere2.vectors, facecolors='b',edgecolors='k', linewidths=1, alpha=0.75))
-#axes.plot3D(vertices[:,0], vertices[:,1], vertices[:,2], 'gray')
-
-# Auto scale to the mesh size
-scale = sphere1.points.flatten()
-axes.auto_scale_xyz(scale, scale, scale)
-#axes.scatter3D(vertices[:,0], vertices[:,1], vertices[:,2])
-
-# Show the plot to the screen
-pyplot.show()
