@@ -18,3 +18,8 @@
 
 ## Thu 02-Dec: TP Showcase (in lecture)
 
+### Other ideas
+
+- [ ] different 3D shapes based on ratating an spline
+- [ ] write a function to generate the .stl file
+
