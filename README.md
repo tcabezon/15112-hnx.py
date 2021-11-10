@@ -1,5 +1,8 @@
 # 15112-TP
 
+![alt text](https://github.com/tcabezon/15112-TP/blob/main/15112-TP.jpeg?raw=true)
+
+
 ## Sat 13-Nov, 8pm: TP0 (Tech Demos are due)
 
 - [x] write function to model sphere in numpy stl
