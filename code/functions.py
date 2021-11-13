@@ -40,12 +40,7 @@ def spherePointsAndFaces(center=[0.,0.,0.],stepU=10,stepV=6,r=1):
                 facesSphere[facesIndexTop,0]= (row*(stepU)+col)
                 facesSphere[facesIndexTop,1]= ((row-1)*(stepU)+(col+1)%stepU)
                 facesSphere[facesIndexTop,2]= ((row-1)*(stepU)+col)
-                '''
-                if col==stepU-1:
-                    facesSphere[indexInMatrix,1]= ((row-1)*(stepU)+col+1)-stepU
-                else:
-                    facesSphere[indexInMatrix,1]= ((row-1)*(stepU)+col+1)
-                print(facesSphere[indexInMatrix,:])'''
+                
 
                 #bottom triangle
                 facesIndexBottom= (row-1)*(2*stepU)+col
@@ -88,6 +83,7 @@ def spherePointsAndFaces(center=[0.,0.,0.],stepU=10,stepV=6,r=1):
 def sphereMesh(center=[0.,0.,0.],stepU=10,stepV=6,r=1):
     pointsSphere,facesSphere=spherePointsAndFaces(center,stepU,stepV,r)
     # Create the mesh
+    #this function uses the numpy stl library mesh function (from stl import mesh)
     sphere = mesh.Mesh(np.zeros(facesSphere.shape[0], dtype=mesh.Mesh.dtype))
 
     for i, f in enumerate(facesSphere):
