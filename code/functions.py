@@ -92,8 +92,11 @@ def sphereMesh(center=[0.,0.,0.],stepU=10,stepV=6,r=1):
             sphere.vectors[i][j] = pointsSphere[f[j],:]
             #print(cube.vectors[i][j])
 
-    print(facesSphere)
+    #print(facesSphere)
     return sphere
+
+def drawArrow(canvas,start, end, fill="red", width=3):
+    canvas.create_line(start[0],start[1],end[0],end[1], fill=fill, width=width)
 
 
 def threeDtotwoD(treeDPoints,theta_x=210,theta_y=330):
@@ -105,28 +108,70 @@ def threeDtotwoD(treeDPoints,theta_x=210,theta_y=330):
     twoDPoints=np.matmul(treeDPoints,transformationMatrix)
     return twoDPoints
 
+
+def newtwoDToThreeD_NoZChange(twoDPoints,treeDPoints,theta_x=210,theta_y=330):
+    getZ=np.array([[0,0,0],[0,0,1]])
+    #print(treeDPoints)
+    onlyZ=np.matmul(getZ,treeDPoints.transpose())
+    xY=twoDPoints-onlyZ.transpose()
+    #print(xY)
+    matrix=np.array([[ math.cos(math.radians(theta_x)),math.sin(math.radians(theta_x))],
+                        [ math.cos(math.radians(theta_y)),math.sin(math.radians(theta_y))]])
+    inverse = np.linalg.inv(matrix)
+    mult=np.matmul(xY,inverse)
+    getXY=np.array([[1,0,0],[0,1,0]])
+    getZ=np.array([[0,0,0],[0,0,0],[0,0,1]])
+    z=np.matmul(treeDPoints,getZ)
+    x_y=np.matmul(mult,getXY)
+    return (x_y+z)
+
+def newtwoDToThreeD_zChange(twoDPoints,treeDPoints,theta_x=210,theta_y=330):
+    getZ=twoDPoints[1]-treeDPoints[1]*math.sin(math.radians(theta_y))-treeDPoints[0]*math.sin(math.radians(theta_x))
+    treeDPoints[2]=getZ
+    return treeDPoints
+
 def displayPoints(app,canvas,points,r=2,color='green'):
     transformMatrix=np.array([[1,0],[0,-1]])
+    originalCoordinates=points.astype(int)
     points=np.matmul(points,transformMatrix)
-    for point in points:
+    for i in range(points.shape[0]):
+        point=points[i]
         cx=app.width/2+point[0]
         cy=app.height/2+point[1]
         canvas.create_oval(cx+r,cy+r,cx-r,cy-r,fill=color)
+        canvas.create_text(cx,cy,text=f'({originalCoordinates[i][0]},{originalCoordinates[i][1]})',font='Arial 10 bold',anchor='sw')
+        canvas.create_text(cx+10,cy+10,text=f'({app.vertices[i][0]},{app.vertices[i][1]},{app.vertices[i][2]})',fill='blue',font='Arial 10 bold',anchor='sw')
+
+def twoDToIsometric(app,points):
+    transformMatrix=np.array([[1,0],[0,-1]])
+    points=np.matmul(points,transformMatrix)
+    points[0]+=app.width/2
+    points[1]+=app.height/2
+    return points
+
+def isometricToTwoD(app,point):
+    x=-app.width/2+point[0]
+    y=-point[1]+app.height/2
+    return (x,y)
+
+
 
 def displayFaces(app,canvas,vertices,faces):
     transformMatrix=np.array([[1,0],[0,-1]])
     vertices=np.matmul(vertices,transformMatrix)
     for i in range(faces.shape[0]):
         faceIndexes=faces[i]
-        print(f'face {i}: ',faceIndexes)
+        #print(f'face {i}: ',faceIndexes)
         center=[app.width/2,app.height/2]
         point1=center+vertices[faceIndexes[0]]
         point2=center+vertices[faceIndexes[1]]
         point3=center+vertices[faceIndexes[2]]
-        print(point1, point2, point3)
+        #print(point1, point2, point3)
         canvas.create_line(point1[0],point1[1],point2[0],point2[1])
         canvas.create_line(point1[0],point1[1],point3[0],point3[1])
         canvas.create_line(point2[0],point2[1],point3[0],point3[1])
+
+
 
 def printCenter(app,canvas):
     cx=app.width/2
@@ -134,3 +179,40 @@ def printCenter(app,canvas):
     r=2
     canvas.create_oval(cx+r,cy+r,cx-r,cy-r,fill='red')
      
+def findClickedPoint(mousePosition,points2D,tolerance=20):
+    #print('findingClosestPoint')
+    #find the closest point to the mouse position with a distance smaller than the tolerance
+    closestPoint=None
+    closestDistance=None
+    for p in range(len(points2D)):
+        point=points2D[p]
+        #print(p,point)
+        currentDistance= distance(point, mousePosition)
+        if currentDistance<tolerance:
+            #print('found!')
+            if closestDistance==None:
+                closestPoint=p
+                closestDistance=currentDistance
+            else:
+                if currentDistance<closestDistance:
+                    closestPoint=p
+                    closestDistance=currentDistance
+    print(f'closest point: {closestPoint}')
+    return closestPoint
+
+            
+def distance(point1,point2):
+    distance=math.sqrt((point1[0]-point2[0])**2+(point1[1]-point2[1])**2)
+    return distance
+
+def printModeDictionary(app, canvas):
+    
+    #canvas.create_text(app.margin, app.margin,text="printing dictionary", font='Arial 10 bold', anchor='nw')
+    resultString='Press the following keys to enter\nthe different App Modes:\n'
+    for elem in app.modeDictionary:
+        resultString+=elem+': '+app.modeDictionary[elem]+'\n'
+    canvas.create_text(app.margin, app.margin,
+                       text=resultString, font='Arial 10 bold', anchor='nw')
+    
+    canvas.create_text(app.margin, app.height-app.margin,
+                       text=f'{app.mode}', font='Arial 10 bold', anchor='sw')
