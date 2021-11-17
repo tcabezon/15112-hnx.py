@@ -221,7 +221,7 @@ def printModeDictionary(app, canvas):
     canvas.create_text(app.margin, app.height-app.margin,
                        text=f'{app.mode}', font='Arial 10 bold', anchor='sw')
 
-def rotatePointsAngle(app,alpha):
+def rotatePointsAngleH(app,alpha):
     #alpha is in degrees so we convert it to radians
     alpha=math.radians(alpha)
     #print(alpha)
@@ -259,6 +259,52 @@ def rotatePointsAngle(app,alpha):
         app.vertices[i][0]=newX
         app.vertices[i][1]=newY
         app.points2D=threeDtotwoD(app.vertices)
+'''
+def rotatePointsAngleV(app,alpha):
+    print(alpha)
+    #alpha is in degrees so we convert it to radians
+    alpha=math.radians(alpha)
+    print(alpha)
+    #rotating matrix, math from the rotation matrix in wikipedia
+    #https://en.wikipedia.org/wiki/Rotation_matrix
+    rotation_matrix=np.array([[math.cos(alpha)+0.5*(1-math.cos(alpha)),-0.5*(1-math.cos(alpha)),(-1/math.sqrt(2))*math.sin(alpha)],
+                              [-0.5*(1-math.cos(alpha)),math.cos(alpha)+0.5*(1-math.cos(alpha)),(-1/math.sqrt(2))*math.sin(alpha)],
+                              [(1/math.sqrt(2))*math.sin(alpha),(1/math.sqrt(2))*math.sin(alpha),math.cos(alpha)]])
+    
+    result=np.matmul(app.vertices,rotation_matrix)
+    app.vertices=np.copy(result)
+'''
+def rotatePointsAngleV(app,alpha):
+    #print(alpha)
+    #alpha is in degrees so we convert it to radians
+    alpha=math.radians(alpha)
+    #rotating matrix, math from the rotation matrix and quaternions in wikipedia
+    # https://en.wikipedia.org/wiki/Rotation_matrix
+    # https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
+    # https://stackoverflow.com/questions/6721544/circular-rotation-around-an-arbitrary-axis answer by user1205577
+    
+    
+    #rotation_vector
+    (a,b,c)=(1/math.sqrt(2),-1/math.sqrt(2),0)
+    #rotating angle
+    r=alpha
+    q0 = math.cos(r/2)
+    q1 = math.sin(r/2)*a
+    q2 = math.sin(r/2)*b
+    q3 = math.sin(r/2)*c
+    rotation_matrix=np.array([[q0**2+q1**2-q2**2-q3**2,2*(q1*q2 - q0*q3), 2*(q1*q3 + q0*q2)],
+                       [2*(q2*q1 + q0*q3),     q0**2-q1**2+q2**2-q3**2 ,     2*(q2*q3 - q0*q1)],
+                       [2*(q3*q1 - q0*q2),          2*(q3*q2 + q0*q1),     q0**2-q1**2-q2**2+q3**2]])
+    '''
+    #simpler version if the rotation axis is (1/math.sqrt(2),-1/math.sqrt(2),0)
+    rotation_matrix=np.array([[math.cos(alpha)+0.5*(1-math.cos(alpha)),-0.5*(1-math.cos(alpha)),(-1/math.sqrt(2))*math.sin(alpha)],
+                              [-0.5*(1-math.cos(alpha)),math.cos(alpha)+0.5*(1-math.cos(alpha)),(-1/math.sqrt(2))*math.sin(alpha)],
+                              [(1/math.sqrt(2))*math.sin(alpha),(1/math.sqrt(2))*math.sin(alpha),math.cos(alpha)]])
+    '''
+    result=np.matmul(rotation_matrix,app.vertices.transpose())
+    app.vertices=result.transpose()
+    app.points2D=threeDtotwoD(app.vertices)
+    
 
 def findMaxX(app):
     points2D=np.copy(app.points2D)
@@ -272,6 +318,20 @@ def findMaxX(app):
     #maxX=maxX*math.cos(math.radians(30))
     #print('maxXisometric',maxX)
     return maxX
+
+def findMaxY(app):
+    points2D=np.copy(app.points2D)
+    # initialize to the first point
+    maxX=abs(points2D[0][1])
+    for i in range(len(points2D)):
+        currentX=abs(points2D[i][1])
+        if currentX>maxX:
+            maxX=currentX
+    #print('maxX2D',maxX)
+    #maxX=maxX*math.cos(math.radians(30))
+    #print('maxXisometric',maxX)
+    return maxX
+
 
 
     
