@@ -131,16 +131,20 @@ def newtwoDToThreeD_zChange(twoDPoints,treeDPoints,theta_x=210,theta_y=330):
     return treeDPoints
 
 def displayPoints(app,canvas,points,r=2,color='green'):
+    np.set_printoptions(precision=1)
     transformMatrix=np.array([[1,0],[0,-1]])
-    originalCoordinates=points.astype(int)
+    originalCoordinates=np.copy(points)
+    originalCoordinates3D=np.copy(app.vertices)
+
+    #originalCoordinates3D=originalCoordinates3D.astype(int)
     points=np.matmul(points,transformMatrix)
     for i in range(points.shape[0]):
         point=points[i]
         cx=app.width/2+point[0]
         cy=app.height/2+point[1]
         canvas.create_oval(cx+r,cy+r,cx-r,cy-r,fill=color)
-        canvas.create_text(cx,cy,text=f'({originalCoordinates[i][0]},{originalCoordinates[i][1]})',font='Arial 10 bold',anchor='sw')
-        canvas.create_text(cx+10,cy+10,text=f'({app.vertices[i][0]},{app.vertices[i][1]},{app.vertices[i][2]})',fill='blue',font='Arial 10 bold',anchor='sw')
+        canvas.create_text(cx,cy,text='({:.0f},{:.0f})'.format(originalCoordinates[i][0],originalCoordinates[i][1]),font='Arial 10 bold',anchor='sw')
+        canvas.create_text(cx+10,cy+10,text='({:.0f},{:.0f},{:.0f})'.format(originalCoordinates3D[i][0],originalCoordinates3D[i][1],originalCoordinates3D[i][2]),fill='blue',font='Arial 10 bold',anchor='sw')
 
 def twoDToIsometric(app,points):
     transformMatrix=np.array([[1,0],[0,-1]])
@@ -216,3 +220,58 @@ def printModeDictionary(app, canvas):
     
     canvas.create_text(app.margin, app.height-app.margin,
                        text=f'{app.mode}', font='Arial 10 bold', anchor='sw')
+
+def rotatePointsAngle(app,alpha):
+    #alpha is in degrees so we convert it to radians
+    alpha=math.radians(alpha)
+    #print(alpha)
+    
+    for i in range(len(app.vertices)):
+        #print('rotating point ',i,' from ',len(app.vertices))
+        point=app.vertices[i]
+        #print(point)
+        module=math.sqrt(point[0]**2+point[1]**2)
+        ############################
+        if point[0]==0:
+            if point[1]>0:
+                tetha=math.radians(90)
+            else:
+                tetha=math.radians(270)
+        else:
+            tetha=math.atan(point[1]/point[0])
+            #print('tetha',math.degrees(tetha))
+            if point[0]>0: #x>0
+                if point[1]>0: #y>0
+                    tetha=tetha #no changes
+                else: #y<0
+                    tetha=math.radians(360)+tetha       
+            else: #x<0
+                if point[1]>0: #y>0
+                    tetha=math.radians(180)+tetha 
+                else: #y<0
+                    tetha=math.radians(180)+tetha 
+        #print('tetha=',math.degrees(tetha))
+        ########################################
+        
+        newX=module*math.cos(tetha+alpha)
+        newY=module*math.sin(tetha+alpha)
+        #print('new point:', newX,newY)
+        app.vertices[i][0]=newX
+        app.vertices[i][1]=newY
+        app.points2D=threeDtotwoD(app.vertices)
+
+def findMaxX(app):
+    points2D=np.copy(app.points2D)
+    # initialize to the first point
+    maxX=abs(points2D[0][0])
+    for i in range(len(points2D)):
+        currentX=abs(points2D[i][0])
+        if currentX>maxX:
+            maxX=currentX
+    #print('maxX2D',maxX)
+    #maxX=maxX*math.cos(math.radians(30))
+    #print('maxXisometric',maxX)
+    return maxX
+
+
+    
