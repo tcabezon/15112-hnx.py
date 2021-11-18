@@ -10,8 +10,8 @@ from functions import *
 # PARAMETERS
 #####################################################
 center=[0.,0.,0.]
-stepU=10
-stepV=10
+stepU=7
+stepV=3
 r=100
 
 # generate the mesh

@@ -19,13 +19,6 @@ vertices = np.array([\
     [50,50,200]])
 
 vertices=vertices.astype(float)
-'''
-2D
-[[   0    0]
- [ -86  -50]
- [   0 -100]
- [  86  -50]
- [   0  149]]'''
 
 # Define the 12 triangles composing the octahedron
 faces = np.array([\
