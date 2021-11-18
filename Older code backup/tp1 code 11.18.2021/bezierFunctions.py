@@ -131,18 +131,3 @@ def bezierMesh(bezierCurvePoints,stepU=10):
 
     #print(facesMesh)
     return bMesh
-
-def printBezierOptions(app,canvas):
-    canvas.create_text(app.width-app.margin, app.height-app.margin,
-                       text=f'Press:\nd, to display the mesh\ns, to save the .stl file', font='Arial 10 bold', anchor='se')
-
-def saveMesh(app):
-    # generate the mesh
-    bezierCurve=bezierCurvePointList(app.pointList,app.numberOfBezierPoints)
-    bezierCurve=np.array(bezierCurve)
-    bezierCurve[:,0]-=(app.width/2)
-    bMesh = bezierMesh(bezierCurve,app.stepU)
-
-
-    # SAVE THE MODEL
-    bMesh.save('mesh.stl')

@@ -23,7 +23,6 @@ pointsSphere2D=threeDtotwoD(pointsSphere,theta_x,theta_y)
 
 def appStarted(app):
     app.draw=False
-    #app.vertices
   
 def keyPressed(app, event):
     app.draw=not app.draw

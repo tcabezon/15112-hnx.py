@@ -231,9 +231,7 @@ def rotatePointsAngleH(app,alpha):
         point=app.vertices[i]
         #print(point)
         module=math.sqrt(point[0]**2+point[1]**2)
-        
-        
-        ########################################
+        ############################
         if point[0]==0:
             if point[1]>0:
                 tetha=math.radians(90)
@@ -261,7 +259,21 @@ def rotatePointsAngleH(app,alpha):
         app.vertices[i][0]=newX
         app.vertices[i][1]=newY
         app.points2D=threeDtotwoD(app.vertices)
-
+'''
+def rotatePointsAngleV(app,alpha):
+    print(alpha)
+    #alpha is in degrees so we convert it to radians
+    alpha=math.radians(alpha)
+    print(alpha)
+    #rotating matrix, math from the rotation matrix in wikipedia
+    #https://en.wikipedia.org/wiki/Rotation_matrix
+    rotation_matrix=np.array([[math.cos(alpha)+0.5*(1-math.cos(alpha)),-0.5*(1-math.cos(alpha)),(-1/math.sqrt(2))*math.sin(alpha)],
+                              [-0.5*(1-math.cos(alpha)),math.cos(alpha)+0.5*(1-math.cos(alpha)),(-1/math.sqrt(2))*math.sin(alpha)],
+                              [(1/math.sqrt(2))*math.sin(alpha),(1/math.sqrt(2))*math.sin(alpha),math.cos(alpha)]])
+    
+    result=np.matmul(app.vertices,rotation_matrix)
+    app.vertices=np.copy(result)
+'''
 def rotatePointsAngleV(app,alpha):
     #print(alpha)
     #alpha is in degrees so we convert it to radians
