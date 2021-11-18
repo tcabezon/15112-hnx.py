@@ -108,11 +108,17 @@ def moveMode_keyPressed(app,event):
     print(event.key)
     if event.key=='d':
         displayMesh(app)
+    if event.key=='s':
+        saveMesh(app) 
     if event.key in app.modeDictionary:
         app.mode=app.modeDictionary[event.key]
 
     
-        
-
-
 runApp(width=400, height=400)
+
+'''
+Things that could be improved:
+Adding the points to the bezier curve control points not in order but depending 
+on the rest of the points. This is, if the user clicks betweeen points with index 2 and 3, 
+the new point should be added to the list with index 3, not at the end
+'''

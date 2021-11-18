@@ -25,6 +25,11 @@ def deCasteljau(pointList, t):
             newList.append(newPoint)
         return deCasteljau(newList, t)
 
+'''
+Things that could be improved:
+Using numpy to calculate the points newPoint_j instead of a for loop.
+'''
+
 def bezierCurvePointList(pointList,numberOfPoints):
     if pointList==[]: return []
     bezierCurve=[]
@@ -146,3 +151,4 @@ def saveMesh(app):
 
     # SAVE THE MODEL
     bMesh.save('mesh.stl')
+    print('mesh saved')
