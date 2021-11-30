@@ -358,9 +358,6 @@ def rotateMode_keyPressed(app,event):
   
 def rotateMode_mouseDragged(app,event):
     #find the maxX value of the points to know the rotating angle value
-    '''if app.maxX==None:
-        app.maxX=findMaxX(app) 
-        app.maxY=findMaxY(app) '''
     #get the mouse position
     mousePosition=(event.x ,event.y)
     print('mouse dragged at',mousePosition)
