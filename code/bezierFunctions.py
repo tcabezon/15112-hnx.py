@@ -7,9 +7,11 @@ from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 from functions import *
-
+'''
 def deCasteljau(pointList, t):
     #recursive definition of the de casteljau algorithm
+    #inspired from https://es.wikipedia.org/wiki/Algoritmo_de_De_Casteljau
+
     if len(pointList)==1:
         #if we finally found b_0,n
         return pointList[0]
@@ -24,12 +26,12 @@ def deCasteljau(pointList, t):
             #print('newPoint', newPoint)
             newList.append(newPoint)
         return deCasteljau(newList, t)
-
+'''
 '''
 Things that could be improved:
 Using numpy to calculate the points newPoint_j instead of a for loop.
 '''
-
+'''
 def bezierCurvePointList(pointList,numberOfPoints):
     if pointList==[]: return []
     bezierCurve=[]
@@ -38,20 +40,24 @@ def bezierCurvePointList(pointList,numberOfPoints):
         bezierCurve.append(deCasteljau(pointList, t))
     #print(bezierCurve)
     return bezierCurve
+'''
 
 def drawBezierCurve(canvas,app):
-    bezierCurve=bezierCurvePointList(app.pointList,app.numberOfBezierPoints)
-    drawPoints(canvas,bezierCurve,'blue')
+    bezierCurve=app.bezier.bezierCurvePoints
+    drawPoints(app,canvas,bezierCurve,'blue')
     
 #draw a list of points in 2D
-def drawPoints(canvas,pointList,color='black'):
+def drawPoints(app,canvas,pointList,color='black'):
     r=2
     for i in range(len(pointList)):
-        (cx, cy) = pointList[i]
+        (cx, cy) = np.array(pointList[i])*(app.width*app.meshViewStart)
+        (cx,cy) = ((app.width*app.meshViewStart)/2+cx,(app.width*app.meshViewStart)/2-cy)
         canvas.create_oval(cx-r, cy-r, cx+r, cy+r, fill=color)
         if i!=0:
-            canvas.create_line(pointList[i],pointList[i-1],fill=color)
-
+            canvas.create_line((cx, cy),previousPoint,fill=color)
+        previousPoint= (cx,cy)
+        
+'''
 def bezierPointsAndFacer(bezierCurvePoints,stepU=10):
     #stepU xy plane divisions
     # stepV z axisdivisions
@@ -121,7 +127,8 @@ def bezierPointsAndFacer(bezierCurvePoints,stepU=10):
 
     facesMesh= np.concatenate((topfacesMesh, facesMesh,bottomfacesMesh), axis=0)
     return pointsMesh,facesMesh
-
+'''
+'''
 def bezierMesh(bezierCurvePoints,stepU=10):
     pointsMesh,facesMesh=bezierPointsAndFacer(bezierCurvePoints,stepU)
     # Create the mesh
@@ -136,19 +143,46 @@ def bezierMesh(bezierCurvePoints,stepU=10):
 
     #print(facesMesh)
     return bMesh
+'''
 
 def printBezierOptions(app,canvas):
-    canvas.create_text(app.width-app.margin, app.height-app.margin,
-                       text=f'Press:\nd, to display the mesh\ns, to save the .stl file', font='Arial 10 bold', anchor='se')
-
+    canvas.create_text(app.margin, app.width*app.meshViewStart,
+                       text=f'Press:\nd, to display the mesh\ng, to save the .stl file', font='Arial 10 bold', anchor='nw')
+'''
 def saveMesh(app):
     # generate the mesh
     bezierCurve=bezierCurvePointList(app.pointList,app.numberOfBezierPoints)
     bezierCurve=np.array(bezierCurve)
     bezierCurve[:,0]-=(app.width/2)
-    bMesh = bezierMesh(bezierCurve,app.stepU)
+    bMesh = bezierMesh(bezierCurve,app.stepBezier)
 
 
     # SAVE THE MODEL
-    bMesh.save('mesh.stl')
+    bMesh.save('bezierMesh.stl')
     print('mesh saved')
+'''
+def displayMesh(app):
+    # generate the mesh
+    bezierCurve=bezierCurvePointList(app.pointList,app.numberOfBezierPoints)
+    bezierCurve=np.array(bezierCurve)
+    bezierCurve[:,0]-=(app.width/2)
+    bMesh = bezierMesh(bezierCurve,app.stepBezier)
+
+    # PLOTTING
+    # Create a new plot
+    figure = pyplot.figure()
+    axes = mplot3d.Axes3D(figure)
+
+    # Add the vectors to the plot
+    #using matplot library to plot the 3D mesh
+    axes.add_collection3d(mplot3d.art3d.Poly3DCollection(-bMesh.vectors, facecolors='b',edgecolors='k', linewidths=1, alpha=0.75))
+
+
+    # Auto scale to the mesh size
+    scale = bMesh.points.flatten()
+    axes.auto_scale_xyz(scale, scale, scale)
+    
+    axes.scatter(0,-bezierCurve[:,0], -bezierCurve[:,1])
+
+    # Show the plot to the screen
+    pyplot.show()
