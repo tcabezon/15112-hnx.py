@@ -59,5 +59,20 @@ While in main Mode there are some useful shortcuts:
 '.' or '+': zooming in
 ',' or '-' or '_': zooming out
 
+• PARAMETERS OF THE PROGRAM • 
+
+The following parameters in the hnX.py are important to define the mesh quality or ring size:
+- When loading the Ring object:
+   -> Ring(innerDiameter,ringRadious,stepCircunferenc,stepRing):
+	stepCircunference: number of the subdivisions along the ring, number of subdivisions on the rotation process
+	stepRing: number of subdivisions of the section circumference that is rotated to generate the ring
+   -> Sphere(r,stepU,stepV):
+	stepU: sphere xy plane divisions
+	stepV: sphere z axis divisions
+   -> Bezier3D(controlPointList, numberOfPoints, stepU):
+	numberOfpoints: number of divisions on each bezier curve
+	stepU: number of subdivisions in the rotation process of the bezier curve to generate the 3D element
+   
+
 
 

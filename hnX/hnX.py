@@ -69,10 +69,6 @@ def appStarted(app):
                         '3':15,
                         '4':20,
                         '5':25}
-
-    # app.vertices=np.copy(vertices)
-    # app.points2D=np.copy(ring1.points2D)
-
     app.vertices=np.copy(app.ring.vertices)
     app.points2D=np.copy(app.ring.points2D)
     app.faces=np.copy(app.ring.faces)
@@ -285,7 +281,6 @@ def moveZMode_mouseDragged(app,event):
             print(app.points2D)
             app.initialYCoordinate=app.points2D[pointToMoveIndex][1]
             app.movingPoint=pointToMoveIndex
-        #print('dragging point',pointToMoveIndex)
     elif app.movingPoint!=None:
         app.points2D[app.movingPoint][1]=mousePosition[1]
         #convert the 2D coordinates to 3D and update the point
@@ -296,10 +291,6 @@ def moveZMode_mouseReleased(app,event):
     mouseReleasedPosition=isometricToTwoD(app,mouseReleasedPosition)
     print('mouse released at:', mouseReleasedPosition)
     if app.movingPoint!=None:
-        #zChange=mouseReleasedPosition[1]-app.initialYCoordinate
-        #app.vertices[app.movingPoint][2]=app.initialYCoordinate
-        #zChange=mouseReleasedPosition[1]-app.initialYCoordinate
-        #app.vertices[app.movingPoint][2]+=zChange
         app.movingPoint=None
 
         
@@ -382,14 +373,9 @@ def rotateMode_mouseDragged(app,event):
         #we calculate the dragged distances
         rotatedXDistance=mousePosition[0]-app.rotatingInitialPosition[0]
         rotatedYDistance=-mousePosition[1]+app.rotatingInitialPosition[1]
-        
         #the rotated angel is proportional to the dragged distance
         #To get this angle and distance relationship i have supposed that
         # dragging a distance equal to the max(x_distance) of all the points should rotate 45 degrees
-        '''
-        angleX=45*rotatedXDistance/app.maxX
-        angleY=45*rotatedYDistance/app.maxY
-        '''
         angleX=45*rotatedXDistance/(app.width/2)
         angleY=45*rotatedYDistance/(app.height/2)
         rotatePointsAngleH(app,angleX)  
@@ -485,9 +471,6 @@ def bezier_mousePressed(app, event):
     if (abs(newPoint[0]>0.5 or newPoint[1]>0.5 )): 
         print('point outside box')
     else:
-        #print('app.bezier.controlPointList',app.bezier.controlPointList)
-        #print('app.bezier.bezierCurvePoints',app.bezier.bezierCurvePoints)
-        #print('newPoint',newPoint)
         app.bezier.controlPointList.insert(len(app.bezier.controlPointList)-1,newPoint)
         #update the other variables of the app.bezier object
         app.bezier.bezierCurvePoints=app.bezier.bezierCurvePointList()
@@ -626,7 +609,6 @@ def moveBezierMode_keyPressed(app,event):
     if event.key=='s':
         print('saving mesh')
         saveCurrentMesh(app)
-
     
 runApp(width=900, height=600)
 
