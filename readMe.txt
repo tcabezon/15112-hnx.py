@@ -1,10 +1,3 @@
-#################################################
-# hnX.py
-#
-# Your name: Tomas Cabezon Pedroso
-# Your andrew id: tcabezon
-#################################################
-
 • PROGRAM DESCRIPTION • 
 
 This project will be a ring generator. The output of his program will be a .stl file of the 3D model that the user created using the program.
@@ -75,4 +68,4 @@ The following parameters in the hnX.py are important to define the mesh quality 
    
 
 
-
+
