@@ -5,6 +5,7 @@ import math
 from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
+import stl
 
 # Functions used for the hnX.py main program,
 # this includes functions to display, 
@@ -308,13 +309,15 @@ def mousePressedInsideRing(app,mousePosition):
 def saveCurrentMesh(app):
     # Create the mesh
     #this function uses the numpy stl library mesh function (from stl import mesh)
+    '''
     myMesh = mesh.Mesh(np.zeros(app.faces.shape[0], dtype=mesh.Mesh.dtype))
     for i, f in enumerate(app.faces):
         for j in range(3):
             myMesh.vectors[i][j] = app.vertices[f[j],:]
     print('Current mesh saved as currentMesh.stl')
-    myMesh.save('currentMesh.stl')
-
+    myMesh.save('currentMesh.stl', mode=stl.Mode.ASCII)
+    '''
+    app.ring.saveSTL()
 
 def convertEditViewToBezierPoints(app,point):
     newPointY=((app.meshViewStart*app.width*app.doubleView)/2-point[1])/(app.meshViewStart*app.width*app.doubleView)
@@ -464,3 +467,10 @@ def displayMesh(app):
 
     # Show the plot to the screen
     pyplot.show()
+
+#######
+def calculateNormal(point0,point1,point2):
+    vector1=point1-point0
+    vector2=point2-point0
+    normal=np.cross(vector1.transpose(),vector2)
+    return normal 

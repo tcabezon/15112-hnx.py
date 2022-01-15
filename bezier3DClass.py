@@ -1,6 +1,6 @@
 from cmu_112_graphics import *
 import numpy as np
-from stl import mesh
+#from stl import mesh
 import math
 from hnXfunctions import *
 

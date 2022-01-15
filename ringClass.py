@@ -119,6 +119,21 @@ class Ring(object):
         self.faces=np.concatenate((self.faces, addingFaces), axis=0)
         self.points2D=threeDtotwoD(self.vertices)
         self.mesh=self.ringMesh()
+
+    def saveSTL(self):
+        with open('hnX.stl','w') as output:
+            sys.stdout=output
+            print('solid hnX.stl')
+            for face in self.faces:
+                normal=calculateNormal(self.vertices[face[0]],self.vertices[face[1]],self.vertices[face[2]])
+                print('facet normal ',normal[0],normal[1],normal[2])
+                print('  outer loop')
+                print('    vertex ',self.vertices[face[0]][0],self.vertices[face[0]][1],self.vertices[face[0]][2])
+                print('    vertex ',self.vertices[face[1]][0],self.vertices[face[1]][1],self.vertices[face[1]][2])
+                print('    vertex ',self.vertices[face[2]][0],self.vertices[face[2]][1],self.vertices[face[2]][2])
+                print('  endloop')        
+                print('endfacet')   
+            print('endsolid hnX.stl')     
         
 
 

@@ -15,12 +15,6 @@ from ringClass import *
 #GRAPHICS
 from cmu_112_graphics import *
 
-#OTHER LIBRARIES
-from matplotlib import pyplot
-import numpy as np
-from stl import mesh
-import math
-
 
 #####################
 # AppStarted
@@ -35,7 +29,7 @@ def appStarted(app):
     app.numberOfButtons=5
     app.widthEachElement=(app.width*app.meshViewStart-(app.numberOfButtons+1)*5)/app.numberOfButtons
     app.mode='mainMode'
-    app.ring=Ring(200,5,stepRing=10,stepCircunference=3)
+    app.ring=Ring(200,5,stepRing=15,stepCircunference=4)
     app.draw=True
     app.mousePosition=(0,0)
     app.editMode=False
@@ -57,7 +51,7 @@ def appStarted(app):
     app.zoomInitialPosition=None
     #initialize the BezierCurve control point List
     controlPointList=[[0,0.3],[0,-0.3]]
-    app.numberOfBezierPoints=8
+    app.numberOfBezierPoints=15
     app.bezier=Bezier3D(controlPointList,app.numberOfBezierPoints)
     #copy of the 2D points for the rotation option on the bezier mode
     app.bezier.points2Dcopy=np.copy(app.bezier.points2D)

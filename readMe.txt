@@ -19,12 +19,12 @@ Files that are needed to use hnX.py:
 - ringClass.py
 - sphereClass.py
 - bezier3DClass.py
+- toSTL.py
 - cmu_112_graphics.py
 
 Libraries needed:
 - Numpy: https://numpy.org/
-- Numpy stl: https://pypi.org/project/numpy-stl/
-- MatplotLib: https://matplotlib.org/
+
 
 • USING THE PROGRAM • 
 
